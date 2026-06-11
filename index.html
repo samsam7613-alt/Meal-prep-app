@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Green Plate — Daily Challenge</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --forest: #1C3D2E;
+    --forest-light: #2A5940;
+    --cream: #F7F2E8;
+    --cream-dark: #EDE6D5;
+    --amber: #E8A830;
+    --amber-light: #F5C35A;
+    --sage: #7BAF7A;
+    --sage-light: #A8C9A7;
+    --coral: #E87D5A;
+    --text-dark: #1A2E22;
+    --text-mid: #3D5A47;
+    --text-muted: #7A9482;
+    --green-accent: #1D9E75;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--forest);
+    min-height: 92vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-leaf {
+    position: absolute; top: 0; right: 0; width: 55%; height: 100%;
+    opacity: .07; pointer-events: none;
+  }
+
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 80px 80px;
+    position: relative; z-index: 2;
+  }
+
+  .hero-eyebrow {
+    font-size: .75rem; font-weight: 600; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    font-weight: 700; line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 24px;
+  }
+
+  .hero-title em { font-style: italic; color: var(--sage-light); }
+
+  .hero-sub {
+    font-size: 1.05rem; font-weight: 300;
+    color: var(--sage-light); line-height: 1.7;
+    max-width: 420px; margin-bottom: 40px;
+  }
+
+  .hero-pills {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  }
+
+  .hero-pill {
+    padding: 8px 16px; border-radius: 100px;
+    font-size: .8rem; font-weight: 600; letter-spacing: .04em;
+  }
+
+  .hp-carbs   { background: rgba(232,168,48,.2);  color: var(--amber-light); }
+  .hp-protein { background: rgba(232,125,90,.2);  color: #F4A58A; }
+  .hp-fiber   { background: rgba(123,175,122,.2); color: var(--sage-light); }
+  .hp-vits    { background: rgba(247,242,232,.1); color: var(--cream); }
+  .hp-plus    { color: var(--text-muted); font-size: 1rem; }
+
+  .hero-right {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    position: relative; z-index: 2;
+    padding: 60px 40px;
+  }
+
+  /* ── STAT STRIP ── */
+  .stat-strip {
+    display: flex; gap: 0;
+    background: var(--forest-light);
+  }
+
+  .stat-block {
+    flex: 1; text-align: center;
+    padding: 20px 16px;
+    border-right: 1px solid rgba(255,255,255,.08);
+  }
+  .stat-block:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--cream); line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: .7rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+
+  /* ── NAV TABS ── */
+  .tab-nav {
+    background: var(--forest-light);
+    padding: 0 40px;
+    display: flex; gap: 0;
+    overflow-x: auto; scrollbar-width: none;
+    position: sticky; top: 0; z-index: 100;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+
+  .tab-nav::-webkit-scrollbar { display: none; }
+
+  .tab-nav button {
+    display: flex; align-items: center; gap: 7px;
+    padding: 16px 22px;
+    font-size: .82rem; font-weight: 500; letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--sage-light); background: none; border: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap; cursor: pointer;
+    transition: color .2s, border-color .2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .tab-nav button:hover,
+  .tab-nav button.active {
+    color: var(--cream); border-bottom-color: var(--amber);
+  }
+
+  /* ── SECTIONS ── */
+  .tab-section { display: none; }
+  .tab-section.active { display: block; }
+
+  .content-wrap {
+    max-width: 900px; margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .sec-eyebrow {
+    font-size: .72rem; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--amber);
+    margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
+  }
+
+  .sec-eyebrow::before {
+    content: ''; display: inline-block;
+    width: 24px; height: 1.5px; background: var(--amber);
+  }
+
+  .sec-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 700; line-height: 1.2;
+    color: var(--forest); margin-bottom: 28px;
+  }
+
+  .sec-heading em { font-style: italic; color: var(--coral); }
+
+  /* ── CARDS ── */
+  .gp-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px;
+    border: 1px solid var(--cream-dark);
+    margin-bottom: 20px;
+    transition: transform .25s, box-shadow .25s;
+  }
+
+  .gp-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(28,61,46,.09);
+  }
+
+  .card-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--forest); margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px;
+  }
+
+  /* ── BADGES ── */
+  .badge {
+    font-size: .7rem; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase; padding: 5px 12px;
+    border-radius: 100px; white-space: nowrap;
+  }
+
+  .badge-green  { background: #E8F4E7; color: #3A7338; }
+  .badge-amber  { background: #FEF3D3; color: #B07D0A; }
+  .badge-red    { background: #FDEEE8; color: #B85533; }
+  .badge-purple { background: #EEEDFE; color: #3C3489; }
+  .badge-blue   { background: #E3EEF9; color: #2B5FA6; }
+
+  /* ── CHECK ROWS ── */
+  .check-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--cream-dark);
+    cursor: pointer; transition: background .15s;
+  }
+
+  .check-row:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 20px; height: 20px; border-radius: 6px; flex-shrink: 0;
+    border: 1.5px solid var(--sage);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+    transition: background .2s, border-color .2s;
+  }
+
+  .check-row.done .check-box {
+    background: var(--green-accent); border-color: var(--green-accent);
+  }
+
+  .check-row.done .check-label {
+    color: var(--text-muted); text-decoration: line-through;
+  }
+
+  .check-label {
+    font-size: .9rem; color: var(--text-dark); line-height: 1.5;
+  }
+
+  .check-sub {
+    font-size: .78rem; color: var(--text-muted); margin-top: 2px; line-height: 1.4;
+  }
+
+  /* ── OPTION GROUPS ── */
+  .opt-group { margin-bottom: 16px; }
+
+  .opt-eyebrow {
+    font-size: .68rem; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--text-muted);
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .opt-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .opt-pill {
+    padding: 7px 14px;
+    border: 1.5px solid var(--cream-dark);
+    border-radius: 100px;
+    font-size: .82rem; cursor: pointer;
+    color: var(--text-mid); background: var(--cream);
+    transition: all .15s; font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+  }
+
+  .opt-pill:hover { border-color: var(--sage); color: var(--forest); }
+
+  .opt-pill.selected {
+    background: #E8F4E7; color: #2A5A27;
+    border-color: var(--sage);
+  }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    background: var(--cream-dark); border-radius: 20px;
+    height: 8px; overflow: hidden; margin: 10px 0;
+  }
+
+  .progress-bar {
+    height: 100%; background: var(--green-accent);
+    border-radius: 20px; transition: width .4s ease;
+  }
+
+  /* ── STEPS INPUT ── */
+  .steps-input {
+    border: 1.5px solid var(--cream-dark); border-radius: 12px;
+    padding: 12px 16px; font-size: 1.1rem; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; color: var(--text-dark);
+    background: var(--cream); width: 180px; margin-top: 10px;
+    transition: border-color .2s;
+  }
+
+  .steps-input:focus { outline: none; border-color: var(--sage); }
+
+  .steps-status {
+    font-size: .88rem; font-weight: 600;
+    display: inline-block; margin-top: 6px;
+  }
+
+  /* ── COMPLETE BTN ── */
+  .complete-btn {
+    width: 100%; padding: 14px;
+    background: var(--forest); color: var(--cream);
+    border: none; border-radius: 14px;
+    font-size: .95rem; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: .03em;
+    transition: background .2s, transform .15s;
+    margin-top: 16px;
+  }
+
+  .complete-btn:hover:not(:disabled) {
+    background: var(--forest-light); transform: translateY(-2px);
+  }
+
+  .complete-btn:disabled {
+    background: var(--cream-dark); color: var(--text-muted); cursor: default;
+    transform: none;
+  }
+
+  /* ── CELEBRATE ── */
+  .celebrate-card {
+    background: var(--forest);
+    border-radius: 18px; padding: 40px 28px;
+    text-align: center; margin-top: 20px;
+    display: none;
+  }
+
+  .celebrate-card .sticker-big { font-size: 56px; margin-bottom: 12px; }
+
+  .celebrate-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--cream); margin-bottom: 8px;
+  }
+
+  .celebrate-msg { font-size: .88rem; color: var(--sage-light); }
+
+  /* ── DETOX BANNER ── */
+  .detox-banner {
+    background: linear-gradient(135deg, var(--forest) 0%, var(--forest-light) 100%);
+    border-radius: 20px; padding: 28px;
+    position: relative; overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .detox-banner::after {
+    content: '🍋'; position: absolute; right: 20px; bottom: -8px;
+    font-size: 6rem; opacity: .1; line-height: 1; pointer-events: none;
+  }
+
+  .detox-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; color: var(--cream); margin-bottom: 8px;
+  }
+
+  .detox-text { font-size: .84rem; color: var(--sage-light); line-height: 1.7; }
+
+  /* ── CALENDAR ── */
+  .cal-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem; color: var(--forest); margin-bottom: 16px;
+  }
+
+  .cal-week-labels {
+    display: grid; grid-template-columns: repeat(7,1fr); gap: 4px;
+    margin-bottom: 6px;
+  }
+
+  .cal-week-labels span {
+    text-align: center; font-size: .68rem; font-weight: 600;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .cal-grid {
+    display: grid; grid-template-columns: repeat(7,1fr); gap: 5px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1; border-radius: 10px;
+    border: 1px solid var(--cream-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .78rem; font-weight: 500; color: var(--text-muted);
+    background: #fff; cursor: default; position: relative;
+    transition: background .2s;
+  }
+
+  .cal-day.done { background: #E8F4E7; color: #2A5A27; border-color: var(--sage-light); }
+  .cal-day.today { border: 2px solid var(--green-accent); color: var(--text-dark); font-weight: 700; }
+  .cal-day.sticker { font-size: 1.2rem; }
+
+  .sticker-popup {
+    position: absolute; top: -38px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--forest); border-radius: 8px;
+    padding: 4px 10px; font-size: 1rem;
+    white-space: nowrap; z-index: 10;
+    pointer-events: none; display: none;
+    color: var(--cream); font-size: .8rem;
+  }
+  .cal-day:hover .sticker-popup { display: block; }
+
+  /* ── REWARDS ── */
+  .reward-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-top: 16px;
+  }
+
+  .reward-card {
+    border: 1px solid var(--cream-dark); border-radius: 14px;
+    padding: 14px 8px; text-align: center; background: #fff;
+    transition: transform .2s;
+  }
+
+  .reward-card:hover { transform: translateY(-2px); }
+  .reward-card.locked { opacity: .35; }
+
+  .reward-emoji { font-size: 2rem; margin-bottom: 5px; }
+
+  .reward-date {
+    font-size: .7rem; color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ── MILESTONE LIST ── */
+  .milestone-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 0; border-bottom: 1px solid var(--cream-dark);
+  }
+
+  .milestone-row:last-child { border-bottom: none; }
+
+  .milestone-emoji { font-size: 1.8rem; flex-shrink: 0; }
+
+  .milestone-name {
+    font-family: 'Playfair Display', serif;
+    font-size: .95rem; color: var(--forest); font-weight: 600;
+  }
+
+  .milestone-req { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── RULES / PLAN ── */
+  .rules-bg { background: var(--forest); }
+
+  .rules-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-top: 8px;
+  }
+
+  .rule-card {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+    border-radius: 16px; padding: 24px 20px;
+    transition: background .2s;
+  }
+
+  .rule-card:hover { background: rgba(255,255,255,.1); }
+
+  .rule-icon { font-size: 1.8rem; margin-bottom: 12px; }
+
+  .rule-title {
+    font-family: 'Playfair Display', serif;
+    font-size: .95rem; color: var(--cream); margin-bottom: 6px;
+  }
+
+  .rule-desc { font-size: .8rem; color: var(--sage-light); line-height: 1.6; }
+
+  /* ── INGREDIENT LIST STYLE ── */
+  .ing-list { list-style: none; margin-top: 12px; }
+
+  .ing-list li {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: .85rem; color: var(--text-mid);
+    padding: 6px 0; border-bottom: 1px solid var(--cream-dark);
+    line-height: 1.5;
+  }
+
+  .ing-list li:last-child { border-bottom: none; }
+
+  .ing-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--sage); flex-shrink: 0; margin-top: 7px;
+  }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, transparent, var(--cream-dark), transparent);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--forest); padding: 48px 40px; text-align: center;
+  }
+
+  .footer-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; font-style: italic;
+    color: var(--sage-light); margin-bottom: 12px;
+  }
+
+  .footer-small {
+    font-size: .75rem; color: var(--text-muted);
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  /* ── FADE ANIMATION ── */
+  .fade-up {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity .55s ease, transform .55s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; min-height: auto; }
+    .hero-left { padding: 60px 32px 32px; }
+    .hero-right { padding: 0 32px 56px; }
+    .content-wrap { padding: 48px 24px; }
+    .rules-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .hero-left { padding: 48px 20px 28px; }
+    .hero-right { padding: 0 20px 44px; }
+    .content-wrap { padding: 36px 18px; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .reward-grid { grid-template-columns: repeat(3, 1fr); }
+    .stat-strip { flex-wrap: wrap; }
+    .stat-block { min-width: 33%; }
+    .tab-nav { padding: 0 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section class="hero">
+  <svg class="hero-leaf" viewBox="0 0 500 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M420 50 C420 50 500 200 460 400 C420 600 250 750 100 780 C200 700 350 580 380 420 C410 260 300 100 420 50Z" fill="white"/>
+    <path d="M380 80 C380 80 300 250 320 450 C340 650 200 750 100 780" stroke="white" stroke-width="2"/>
+    <path d="M350 120 L280 220 M340 200 L290 300 M330 280 L275 380 M320 360 L260 440" stroke="white" stroke-width="1.5"/>
+  </svg>
+
+  <div class="hero-left">
+    <p class="hero-eyebrow">🌿 My Green Plate</p>
+    <h1 class="hero-title">
+      The Daily<br>
+      Green <em>Challenge</em>
+    </h1>
+    <p class="hero-sub">One full plate a day — whole foods, balanced macros, 10,000 steps, and a streak worth keeping. Earn stickers. Build the habit.</p>
+    <div class="hero-pills">
+      <span class="hero-pill hp-carbs">🍚 Carbs</span>
+      <span class="hp-plus">+</span>
+      <span class="hero-pill hp-protein">🍗 Protein</span>
+      <span class="hp-plus">+</span>
+      <span class="hero-pill hp-fiber">🥕 Fiber</span>
+      <span class="hp-plus">+</span>
+      <span class="hero-pill hp-vits">🥬 Vitamins</span>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <!-- hero checklist preview -->
+    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:28px 24px;width:100%;max-width:320px;backdrop-filter:blur(4px);">
+      <p style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream);margin-bottom:18px;">Today's checklist</p>
+      <div id="hero-checks"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ STAT STRIP ═══════════════════════ -->
+<div class="stat-strip">
+  <div class="stat-block">
+    <div class="stat-num" id="streak-num">0</div>
+    <div class="stat-label">Day Streak</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num" id="done-num">0</div>
+    <div class="stat-label">Done Today</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num" id="total-num">0</div>
+    <div class="stat-label">Total Days</div>
+  </div>
+  <div class="stat-block">
+    <div class="stat-num" id="sticker-count">0</div>
+    <div class="stat-label">Stickers</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TAB NAV ═══════════════════════ -->
+<nav class="tab-nav">
+  <button class="active" onclick="switchTab('today')">🌿 Today</button>
+  <button onclick="switchTab('calendar')">📅 Calendar</button>
+  <button onclick="switchTab('rewards')">⭐ Rewards</button>
+  <button onclick="switchTab('plan')">📋 Plan</button>
+</nav>
+
+<!-- ═══════════════════════ TODAY TAB ═══════════════════════ -->
+<div id="tab-today" class="tab-section active">
+  <div class="content-wrap">
+
+    <!-- Morning Prep -->
+    <div class="fade-up">
+      <div class="sec-eyebrow">Night Before</div>
+      <h2 class="sec-heading">Morning <em>Prep</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">
+        <span>Overnight soaking</span>
+        <span class="badge badge-green">Do tonight</span>
+      </div>
+      <div class="check-row" onclick="toggle('soak-oats')">
+        <div class="check-box" id="cb-soak-oats">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="check-label">Soak oats overnight</div>
+          <div class="check-sub">½ cup rolled oats in water or milk</div>
+        </div>
+      </div>
+      <div class="check-row" onclick="toggle('soak-chia')">
+        <div class="check-box" id="cb-soak-chia">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="check-label">Soak chia seeds overnight</div>
+          <div class="check-sub">1 tbsp in the same jar or separate</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin: 8px 0 32px;"></div>
+
+    <!-- Detox Water -->
+    <div class="fade-up">
+      <div class="sec-eyebrow">Hydration</div>
+      <h2 class="sec-heading">Detox <em>Water</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="detox-banner">
+        <p class="detox-title">🍋 The Detox Bottle</p>
+        <p class="detox-text">1 big bottle · 4 lemon slices · podina (mint) leaves · beetroot slices · 1 tbsp chia seeds. Fill in the morning. Sip alongside your 3–4 litre goal.</p>
+      </div>
+      <div class="check-row" style="margin-top:8px" onclick="toggle('detox')">
+        <div class="check-box" id="cb-detox">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="check-label">Made + started detox water</div></div>
+      </div>
+      <div class="check-row" onclick="toggle('water')">
+        <div class="check-box" id="cb-water">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="check-label">3–4 litres water today</div></div>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin: 8px 0 32px;"></div>
+
+    <!-- The Full Plate -->
+    <div class="fade-up">
+      <div class="sec-eyebrow">Main Meal</div>
+      <h2 class="sec-heading">The Full <em>Plate</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">
+        <span>Build your plate — one from each</span>
+        <span class="badge badge-green">1 meal / day</span>
+      </div>
+      <p style="font-size:.84rem;color:var(--text-muted);margin-bottom:20px;line-height:1.6">Pick one option from every category. Everything goes in one plate.</p>
+
+      <div class="opt-group">
+        <div class="opt-eyebrow"><span class="badge badge-amber">🍚 Carbs</span> — pick one</div>
+        <div class="opt-pills">
+          <div class="opt-pill" onclick="pickOption('carbs',this,'Brown rice')">Brown rice</div>
+          <div class="opt-pill" onclick="pickOption('carbs',this,'Oats (soaked)')">Oats (soaked)</div>
+          <div class="opt-pill" onclick="pickOption('carbs',this,'Basmati rice')">Basmati rice <span style="font-size:.72rem;opacity:.65">(occasional)</span></div>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-eyebrow"><span class="badge badge-red">🍗 Protein</span> — pick one</div>
+        <div class="opt-pills">
+          <div class="opt-pill" onclick="pickOption('protein',this,'Egg whites (4)')">Egg whites ×4 <span style="font-size:.72rem;opacity:.65">(no yolk)</span></div>
+          <div class="opt-pill" onclick="pickOption('protein',this,'Chicken breast')">Chicken breast <span style="font-size:.72rem;opacity:.65">200–250g</span></div>
+          <div class="opt-pill" onclick="pickOption('protein',this,'Paneer cubes')">Paneer cubes</div>
+          <div class="opt-pill" onclick="pickOption('protein',this,'Tofu cubes')">Tofu cubes</div>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-eyebrow"><span class="badge badge-green">🥕 Fiber</span> — pick one</div>
+        <div class="opt-pills">
+          <div class="opt-pill" onclick="pickOption('fiber',this,'Chia seeds (glass)')">Chia seeds <span style="font-size:.72rem;opacity:.65">1 spoon/glass</span></div>
+          <div class="opt-pill" onclick="pickOption('fiber',this,'Carrot (boiled)')">Carrot <span style="font-size:.72rem;opacity:.65">boiled</span></div>
+          <div class="opt-pill" onclick="pickOption('fiber',this,'Beans (boiled)')">Beans <span style="font-size:.72rem;opacity:.65">boiled</span></div>
+        </div>
+      </div>
+
+      <div class="opt-group">
+        <div class="opt-eyebrow"><span class="badge badge-purple">🥬 Vitamins</span> — leafy greens</div>
+        <div class="opt-pills">
+          <div class="opt-pill" onclick="pickOption('vits',this,'Spinach (boiled)')">Spinach <span style="font-size:.72rem;opacity:.65">boiled, salt only</span></div>
+          <div class="opt-pill" onclick="pickOption('vits',this,'Other leafy greens')">Other leafy greens</div>
+        </div>
+      </div>
+
+      <div class="check-row" id="meal-check-row" onclick="toggle('meal')" style="margin-top:6px">
+        <div class="check-box" id="cb-meal">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="check-label" id="meal-label">Meal eaten — select options above first</div></div>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin: 8px 0 32px;"></div>
+
+    <!-- Night Snack -->
+    <div class="fade-up">
+      <div class="sec-eyebrow">Snack + Drinks</div>
+      <h2 class="sec-heading">Night <em>Snack</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">
+        <span>Fruit — pick one</span>
+        <span class="badge badge-green">no sugar</span>
+      </div>
+      <div class="opt-pills" style="margin-bottom:16px;">
+        <div class="opt-pill" onclick="pickOption('snack',this,'Apple')">🍎 Apple</div>
+        <div class="opt-pill" onclick="pickOption('snack',this,'Orange')">🍊 Orange</div>
+        <div class="opt-pill" onclick="pickOption('snack',this,'Papaya')">🧡 Papaya</div>
+        <div class="opt-pill" onclick="pickOption('snack',this,'Watermelon')">🍉 Watermelon</div>
+      </div>
+      <div class="check-row" onclick="toggle('snack')">
+        <div class="check-box" id="cb-snack">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="check-label">Had night snack (plain, no sugar)</div></div>
+      </div>
+      <div class="check-row" onclick="toggle('majjiga')">
+        <div class="check-box" id="cb-majjiga">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="check-label">Majjiga — plain buttermilk</div>
+          <div class="check-sub">No sugar, anytime of day</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin: 8px 0 32px;"></div>
+
+    <!-- Steps -->
+    <div class="fade-up">
+      <div class="sec-eyebrow">Movement</div>
+      <h2 class="sec-heading">10,000 <em>Steps</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">
+        <span>Daily step goal</span>
+        <span class="badge badge-amber" id="steps-badge">0 / 10,000</span>
+      </div>
+      <p style="font-size:.84rem;color:var(--text-muted);margin-bottom:10px;">Complete your steps to unlock today's sticker!</p>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="steps-bar" style="width:0%"></div>
+      </div>
+      <input class="steps-input" type="number" id="steps-in" placeholder="Enter step count" min="0" max="50000" oninput="updateSteps(this.value)">
+      <div class="steps-status" id="steps-status" style="color:var(--text-muted);"></div>
+      <div class="check-row" onclick="toggle('steps')" style="margin-top:8px">
+        <div class="check-box" id="cb-steps">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" style="display:none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div><div class="check-label">10,000 steps done today</div></div>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin: 8px 0 32px;"></div>
+
+    <!-- Progress + Complete -->
+    <div class="gp-card fade-up">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <span style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--forest);font-weight:600;">Today's Progress</span>
+        <span style="font-size:.88rem;color:var(--text-muted);font-weight:500;" id="progress-text">0 / 8</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="main-bar" style="width:0%"></div>
+      </div>
+      <button class="complete-btn" id="complete-btn" onclick="completeDay()" disabled>Mark day complete ✓</button>
+    </div>
+
+    <div class="celebrate-card" id="celebrate-wrap">
+      <div class="sticker-big" id="day-sticker"></div>
+      <div class="celebrate-title">Day Complete! 🌿</div>
+      <div class="celebrate-msg" id="celebrate-msg"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════ CALENDAR TAB ═══════════════════════ -->
+<div id="tab-calendar" class="tab-section">
+  <div class="content-wrap">
+    <div class="fade-up">
+      <div class="sec-eyebrow">Challenge</div>
+      <h2 class="sec-heading">Monthly <em>Calendar</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="cal-header" id="cal-month"></div>
+      <div class="cal-week-labels">
+        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+      </div>
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">Your stats</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--cream);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--forest);" id="s-streak">0</div>
+          <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;">Streak</div>
+        </div>
+        <div style="background:var(--cream);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--forest);" id="s-total">0</div>
+          <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;">Days Done</div>
+        </div>
+        <div style="background:var(--cream);border-radius:14px;padding:16px;text-align:center;">
+          <div style="font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--forest);" id="s-stickers">0</div>
+          <div style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-top:4px;">Stickers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ REWARDS TAB ═══════════════════════ -->
+<div id="tab-rewards" class="tab-section">
+  <div class="content-wrap">
+    <div class="fade-up">
+      <div class="sec-eyebrow">Collection</div>
+      <h2 class="sec-heading">Your <em>Stickers</em></h2>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">Earned stickers</div>
+      <p style="font-size:.84rem;color:var(--text-muted);line-height:1.6;margin-bottom:4px;">Complete a full day — all checks + 10,000 steps — to earn a random sticker. Unlock special ones at milestones!</p>
+      <div class="reward-grid" id="sticker-collection"></div>
+    </div>
+
+    <div class="gp-card fade-up">
+      <div class="card-label">Milestone rewards</div>
+      <div id="milestone-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ PLAN TAB ═══════════════════════ -->
+<div id="tab-plan" class="tab-section">
+  <div class="rules-bg">
+    <div class="content-wrap">
+      <div class="fade-up">
+        <div class="sec-eyebrow" style="color:var(--amber-light);">The Golden Rules</div>
+        <h2 class="sec-heading" style="color:var(--cream);">Your <em style="color:var(--amber-light)">Plan</em></h2>
+      </div>
+
+      <div class="rules-grid fade-up">
+        <div class="rule-card">
+          <div class="rule-icon">🍚</div>
+          <div class="rule-title">No White Rice</div>
+          <p class="rule-desc">Brown rice daily; basmati only occasionally. White rice spikes blood sugar — skip it.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🚫</div>
+          <div class="rule-title">No Sugar</div>
+          <p class="rule-desc">No sugar in buttermilk, drinks, or anywhere. Natural fruit sugars are more than enough.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🫙</div>
+          <div class="rule-title">½ tbsp Oil Max</div>
+          <p class="rule-desc">Half a tablespoon per meal. No deep frying — boil, roast, or steam only.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🌙</div>
+          <div class="rule-title">Soak Overnight</div>
+          <p class="rule-desc">Oats and chia seeds must soak overnight for better absorption and gentler digestion.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">🥚</div>
+          <div class="rule-title">Egg Whites Only</div>
+          <p class="rule-desc">4 egg whites, no yolk. The white is pure protein; the yolk stays off the plate.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-icon">💧</div>
+          <div class="rule-title">3–4 Litres Water</div>
+          <p class="rule-desc">Drink steadily all day. Detox water counts. Eat slowly; let every meal be a calm moment.</p>
+        </div>
+      </div>
+
+      <!-- The plate breakdown -->
+      <div style="margin-top:48px;" class="fade-up">
+        <p style="font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:20px;">The Full Plate</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;">
+            <p style="font-family:'Playfair Display',serif;color:var(--amber-light);font-size:.95rem;margin-bottom:10px;">🍚 Carbs</p>
+            <ul class="ing-list" style="margin-top:0;">
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--amber);"></span>Brown rice (daily)</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--amber);"></span>Oats, soaked overnight</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--amber);"></span>Basmati (occasional only)</li>
+            </ul>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;">
+            <p style="font-family:'Playfair Display',serif;color:#F4A58A;font-size:.95rem;margin-bottom:10px;">🍗 Protein — pick one</p>
+            <ul class="ing-list" style="margin-top:0;">
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--coral);"></span>4 egg whites (no yolk)</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--coral);"></span>Chicken breast 200–250g</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot" style="background:var(--coral);"></span>Paneer or tofu cubes</li>
+            </ul>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;">
+            <p style="font-family:'Playfair Display',serif;color:var(--sage-light);font-size:.95rem;margin-bottom:10px;">🥕 Fiber — pick one</p>
+            <ul class="ing-list" style="margin-top:0;">
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>Chia seeds (1 spoon/glass)</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>Carrot — boiled</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>Beans — boiled</li>
+            </ul>
+          </div>
+          <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:22px;">
+            <p style="font-family:'Playfair Display',serif;color:var(--cream);font-size:.95rem;margin-bottom:10px;">🥬 Vitamins — always</p>
+            <ul class="ing-list" style="margin-top:0;">
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>Spinach — boiled, salt only</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>Other leafy greens</li>
+              <li style="border-color:rgba(255,255,255,.06);color:var(--sage-light);"><span class="ing-dot"></span>No chilli powder on greens</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- formula row -->
+      <div style="margin-top:48px;text-align:center;" class="fade-up">
+        <p style="font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;">The Balance Formula</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
+          <span style="background:rgba(232,168,48,.15);color:var(--amber-light);padding:10px 20px;border-radius:100px;font-size:.9rem;font-weight:600;">🍚 Carbs</span>
+          <span style="color:var(--sage-light);font-size:1.2rem;">+</span>
+          <span style="background:rgba(232,125,90,.15);color:#F4A58A;padding:10px 20px;border-radius:100px;font-size:.9rem;font-weight:600;">🍗 Protein</span>
+          <span style="color:var(--sage-light);font-size:1.2rem;">+</span>
+          <span style="background:rgba(123,175,122,.15);color:var(--sage-light);padding:10px 20px;border-radius:100px;font-size:.9rem;font-weight:600;">🥕 Fiber</span>
+          <span style="color:var(--sage-light);font-size:1.2rem;">+</span>
+          <span style="background:rgba(247,242,232,.1);color:var(--cream);padding:10px 20px;border-radius:100px;font-size:.9rem;font-weight:600;">🥬 Vitamins</span>
+          <span style="color:var(--sage-light);font-size:1.2rem;">=</span>
+          <span style="background:var(--forest-light);color:var(--cream);padding:10px 20px;border-radius:100px;font-size:.9rem;font-weight:700;border:1px solid rgba(255,255,255,.15);">Complete Day 🌿</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <p class="footer-quote">"Eat slowly, drink enough water, and let every meal nourish you."</p>
+  <p class="footer-small">🌿 My Green Plate — The Daily Challenge</p>
+</footer>
+
+<!-- ═══════════════════════ JS ═══════════════════════ -->
+<script>
+const CHECKS = ['soak-oats','soak-chia','detox','water','meal','snack','majjiga','steps'];
+const ALL_STICKERS = ['🌟','🎯','💪','🏆','🌈','🦋','🌸','🍀','⭐','🎪','🦄','🎨','🎭','🎬','🎤','🎸','🏅','🥇','🌺','🦊','🐬','🦁','🌙','🔥','💎','👑','🎊','🎉','🎀','🧩','🚀','🌊','🎵','🍃','🌿'];
+const MILESTONES = [
+  {days:3,  emoji:'🌱', name:'Sprouting'},
+  {days:7,  emoji:'⭐', name:'One Week Warrior'},
+  {days:14, emoji:'🏅', name:'Two Weeks Strong'},
+  {days:21, emoji:'🏆', name:'Habit Formed'},
+  {days:30, emoji:'👑', name:'30-Day Champion'},
+  {days:50, emoji:'🦋', name:'Transformation'},
+  {days:75, emoji:'💎', name:'Diamond'},
+  {days:100,emoji:'🚀', name:'Century Legend'},
+];
+
+function getStore() {
+  try { return JSON.parse(localStorage.getItem('gp_v3') || 'null') || {checks:{},days:{},options:{},stickers:[]}; }
+  catch(e) { return {checks:{},days:{},options:{},stickers:[]}; }
+}
+function saveStore(s) { try { localStorage.setItem('gp_v3', JSON.stringify(s)); } catch(e) {} }
+
+const todayKey = () => { const d=new Date(); return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`; };
+
+let store = getStore();
+let todayChecks = store.checks[todayKey()] || {};
+let todayOptions = store.options[todayKey()] || {carbs:null,protein:null,fiber:null,vits:null,snack:null};
+
+function toggle(id) {
+  if (id === 'meal' && (!todayOptions.carbs || !todayOptions.protein || !todayOptions.fiber || !todayOptions.vits)) {
+    alert('Please pick one option from each category (carbs, protein, fiber, vitamins) first!');
+    return;
+  }
+  todayChecks[id] = !todayChecks[id];
+  store.checks[todayKey()] = todayChecks;
+  saveStore(store);
+  render();
+}
+
+function pickOption(cat, el, val) {
+  const pills = el.parentElement.querySelectorAll('.opt-pill');
+  pills.forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  todayOptions[cat] = val;
+  store.options[todayKey()] = todayOptions;
+  saveStore(store);
+  if (todayOptions.carbs && todayOptions.protein && todayOptions.fiber && todayOptions.vits) {
+    const lbl = document.getElementById('meal-label');
+    if (lbl) lbl.textContent = `Ate: ${todayOptions.carbs} + ${todayOptions.protein} + ${todayOptions.fiber} + ${todayOptions.vits}`;
+  }
+}
+
+function updateSteps(v) {
+  const n = Math.min(parseInt(v) || 0, 50000);
+  const pct = Math.min(n / 10000 * 100, 100);
+  document.getElementById('steps-bar').style.width = pct + '%';
+  document.getElementById('steps-badge').textContent = `${n.toLocaleString()} / 10,000`;
+  const st = document.getElementById('steps-status');
+  if (n >= 10000) { st.textContent = 'Goal reached! 🎉'; st.style.color = 'var(--green-accent)'; }
+  else if (n > 0) { st.textContent = `${(10000 - n).toLocaleString()} steps to go`; st.style.color = 'var(--text-muted)'; }
+  else { st.textContent = ''; }
+}
+
+function calcStreak() {
+  let streak = 0; const today = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(today); d.setDate(d.getDate() - i);
+    const k = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    if (store.days[k] && store.days[k].complete) { streak++; }
+    else { if (i > 0) break; }
+  }
+  return streak;
+}
+
+function totalDone() { return Object.values(store.days).filter(d => d && d.complete).length; }
+function stickersCount() { return (store.stickers || []).length; }
+
+function render() {
+  const done = CHECKS.filter(c => todayChecks[c]).length;
+
+  CHECKS.forEach(id => {
+    const cb = document.getElementById('cb-' + id);
+    const row = cb && cb.closest('.check-row');
+    if (cb) {
+      cb.classList.toggle('checked', !!todayChecks[id]);
+      const svgEl = cb.querySelector('svg');
+      if (svgEl) svgEl.style.display = todayChecks[id] ? 'block' : 'none';
+    }
+    if (row) row.classList.toggle('done', !!todayChecks[id]);
+  });
+
+  const streak = calcStreak();
+  const td = totalDone();
+  const sc = stickersCount();
+
+  document.getElementById('streak-num').textContent = streak;
+  document.getElementById('done-num').textContent = done;
+  document.getElementById('total-num').textContent = td;
+  document.getElementById('sticker-count').textContent = sc;
+
+  const pct = Math.round(done / CHECKS.length * 100);
+  document.getElementById('main-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${done} / ${CHECKS.length}`;
+
+  const allDone = done === CHECKS.length;
+  document.getElementById('complete-btn').disabled = !allDone;
+
+  const todayCompleted = store.days[todayKey()] && store.days[todayKey()].complete;
+  if (todayCompleted) {
+    document.getElementById('complete-btn').style.display = 'none';
+    document.getElementById('celebrate-wrap').style.display = 'block';
+    const dayData = store.days[todayKey()];
+    document.getElementById('day-sticker').textContent = dayData.sticker || '🌟';
+    document.getElementById('celebrate-msg').textContent = `You earned: ${dayData.sticker || '🌟'} — ${streak} day streak!`;
+  } else {
+    document.getElementById('complete-btn').style.display = 'block';
+    document.getElementById('celebrate-wrap').style.display = 'none';
+  }
+
+  renderCalendar();
+  document.getElementById('s-streak').textContent = streak;
+  document.getElementById('s-total').textContent = td;
+  document.getElementById('s-stickers').textContent = sc;
+  renderStickers();
+  renderHeroChecks();
+}
+
+function completeDay() {
+  const done = CHECKS.filter(c => todayChecks[c]).length;
+  if (done !== CHECKS.length) return;
+  const earned = ALL_STICKERS[Math.floor(Math.random() * ALL_STICKERS.length)];
+  store.days[todayKey()] = {complete: true, sticker: earned, date: new Date().toISOString()};
+  store.stickers = store.stickers || [];
+  store.stickers.push({emoji: earned, date: new Date().toISOString()});
+  saveStore(store);
+  render();
+}
+
+function renderCalendar() {
+  const now = new Date(); const y = now.getFullYear(); const m = now.getMonth();
+  document.getElementById('cal-month').textContent = now.toLocaleString('default', {month: 'long', year: 'numeric'});
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m + 1, 0).getDate();
+  for (let i = 0; i < first; i++) {
+    const d = document.createElement('div'); d.className = 'cal-day'; d.style.visibility = 'hidden'; grid.appendChild(d);
+  }
+  for (let d = 1; d <= days; d++) {
+    const el = document.createElement('div');
+    const k = `${y}-${m}-${d}`;
+    const dayData = store.days[k];
+    const isToday = d === now.getDate();
+    if (dayData && dayData.complete && dayData.sticker) {
+      el.className = 'cal-day sticker' + (isToday ? ' today' : '');
+      el.textContent = dayData.sticker;
+      const pop = document.createElement('div'); pop.className = 'sticker-popup'; pop.textContent = dayData.sticker + ' Day ' + d; el.appendChild(pop);
+    } else {
+      el.className = 'cal-day' + (isToday ? ' today' : '') + (dayData && dayData.complete ? ' done' : '');
+      el.textContent = d;
+    }
+    grid.appendChild(el);
+  }
+}
+
+function renderStickers() {
+  const col = document.getElementById('sticker-collection');
+  if (!col) return;
+  const earned = store.stickers || [];
+  if (earned.length === 0) {
+    col.innerHTML = '<div style="grid-column:span 4;font-size:.84rem;color:var(--text-muted);padding:12px 0;line-height:1.6;">Complete your first full day to earn a sticker! All checks done + 10,000 steps.</div>';
+    return;
+  }
+  col.innerHTML = '';
+  const recent = earned.slice(-12).reverse();
+  recent.forEach(s => {
+    const card = document.createElement('div'); card.className = 'reward-card';
+    card.innerHTML = `<div class="reward-emoji">${s.emoji}</div><div class="reward-date">${new Date(s.date).toLocaleDateString()}</div>`;
+    col.appendChild(card);
+  });
+
+  const ml = document.getElementById('milestone-list');
+  if (!ml) return;
+  ml.innerHTML = '';
+  const td = totalDone();
+  MILESTONES.forEach(ms => {
+    const unlocked = td >= ms.days;
+    const row = document.createElement('div'); row.className = 'milestone-row';
+    row.style.opacity = unlocked ? '1' : '.4';
+    row.innerHTML = `<span class="milestone-emoji">${ms.emoji}</span><div><div class="milestone-name">${ms.name}</div><div class="milestone-req">${ms.days} days${unlocked ? ' — unlocked! 🎉' : ' needed'}</div></div>`;
+    ml.appendChild(row);
+  });
+}
+
+function renderHeroChecks() {
+  const container = document.getElementById('hero-checks');
+  if (!container) return;
+  const items = [
+    {id:'soak-oats', label:'Soak oats overnight'},
+    {id:'soak-chia', label:'Soak chia seeds'},
+    {id:'detox',    label:'Detox water ready'},
+    {id:'water',    label:'3–4 litres water'},
+    {id:'meal',     label:'Full plate eaten'},
+    {id:'steps',    label:'10,000 steps done'},
+  ];
+  container.innerHTML = '';
+  items.forEach(item => {
+    const done = !!todayChecks[item.id];
+    const div = document.createElement('div');
+    div.style.cssText = `display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:.84rem;color:${done ? 'var(--sage)' : 'var(--sage-light)'}`;
+    div.innerHTML = `<div style="width:16px;height:16px;border-radius:4px;border:1.5px solid var(--sage);background:${done ? 'var(--green-accent)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      ${done ? '<svg width="9" height="7" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>' : ''}
+    </div><span style="${done ? 'text-decoration:line-through;opacity:.6' : ''}">${item.label}</span>`;
+    if (item === items[items.length-1]) div.style.borderBottom = 'none';
+    container.appendChild(div);
+  });
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+  const tabs = ['today','calendar','rewards','plan'];
+  document.querySelectorAll('.tab-nav button')[tabs.indexOf(id)].classList.add('active');
+  document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  if (id === 'calendar' || id === 'rewards') render();
+  // re-observe new elements
+  document.querySelectorAll('.fade-up:not(.visible)').forEach(el => observer.observe(el));
+}
+
+// Restore selected pills
+Object.keys(todayOptions).forEach(cat => {
+  if (todayOptions[cat]) {
+    document.querySelectorAll('.opt-pill').forEach(p => {
+      if (todayOptions[cat] && p.textContent.trim().startsWith(todayOptions[cat].split(' ')[0])) {
+        p.classList.add('selected');
+      }
+    });
+  }
+});
+
+// Scroll fade observer
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+render();
+</script>
+</body>
+</html>
